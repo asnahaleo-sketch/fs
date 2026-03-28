@@ -183,7 +183,7 @@ function handleSmartSimulation(query: string) {
   }
 
   // 3. STRATOS: 8-year-old cousin (Youth/Buying decision)
-  if (q.includes('8') || q.includes('cousin') || q.includes('kid') || q.includes('child') || q.includes('youth') || q.includes('old')) {
+  if (q.includes('8') || q.includes('cousin') || q.includes('kid') || q.includes('child') || q.includes('youth') || q.includes('old') || q.includes('nephew') || q.includes('niece') || q.includes('son') || q.includes('daughter')) {
     const youthShoes = MOCK_DB.filter(p => ['store-cloudrunner', 'store-aero'].includes(p.id));
     return {
       reply: `For an 8-year-old, we typically look at "Youth" or "Junior" sizing (US 4Y-6Y). While we focus on high-performance adult silhouettes, the **Stratos CloudRunner's** "Cloud-Foam" is perfect for active children. We also recommend the aerodynamic profile of the **Stratos Aero**. Please verify sizing in the product specs.`,
