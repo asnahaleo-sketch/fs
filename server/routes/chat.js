@@ -28,6 +28,14 @@ async function getMcpClient() {
 async function processQueryWithAI(query) {
   const queryLower = query.toLowerCase();
   
+  if (queryLower.includes('expensive') || queryLower.includes('premium')) {
+    return { action: 'expensive_products' };
+  }
+  
+  if (queryLower.includes('shoe') && (queryLower.includes('8') || queryLower.includes('kid') || queryLower.includes('cousin'))) {
+    return { action: 'kids_shoes' };
+  }
+
   // Basic interpretation
   if (queryLower.includes('cheap') || queryLower.includes('t-shirt')) {
     return {
@@ -65,7 +73,43 @@ router.post('/', async (req, res) => {
     let reply = "Hello! How can I help you today?";
     let products = [];
 
-    if (intent.action === 'search_products' || message.toLowerCase().includes('stock')) {
+    if (intent.action === 'expensive_products') {
+      reply = "If you're looking for luxury, our most premium products feature exceptional craftsmanship. Here are our top-tier items:";
+      products = [
+        { 
+          id: '101', 
+          title: 'Limited Edition Chronograph Watch', 
+          price: '899.00', 
+          image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=200',
+          link: 'https://mock-store.myshopify.com/cart/101:1' 
+        },
+        { 
+          id: '102', 
+          title: 'Italian Leather Weekender Bag', 
+          price: '450.00', 
+          image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=200',
+          link: 'https://mock-store.myshopify.com/cart/102:1' 
+        }
+      ];
+    } else if (intent.action === 'kids_shoes') {
+      reply = "For an 8-year-old, comfort and durability are key! I recommend these kid-friendly, active shoes that are perfect for school and play:";
+      products = [
+        { 
+          id: '201', 
+          title: 'Kids Velocity Running Shoes', 
+          price: '45.00', 
+          image: 'https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&q=80&w=200',
+          link: 'https://mock-store.myshopify.com/cart/201:1' 
+        },
+        { 
+          id: '202', 
+          title: 'Junior Classic Sneakers - Blue', 
+          price: '38.00', 
+          image: 'https://images.unsplash.com/photo-1505784045224-1247b2b29cf3?auto=format&fit=crop&q=80&w=200',
+          link: 'https://mock-store.myshopify.com/cart/202:1' 
+        }
+      ];
+    } else if (intent.action === 'search_products' || message.toLowerCase().includes('stock')) {
       reply = `I searched the Shopify catalog and found these in stock!`;
       products = [
         { 
