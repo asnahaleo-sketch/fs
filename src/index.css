@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-white antialiased overflow-hidden m-0 p-0;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+.electric-gradient {
+  background: linear-gradient(to right, #6366f1, #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.lavender-gradient {
+  background: linear-gradient(to right, #e9d5ff, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-indigo {
+  filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.4));
+}

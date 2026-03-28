@@ -1,0 +1,133 @@
+{
+  "dashboardHero": {
+    "features": [
+      {
+        "headline": "Discover the Unseen",
+        "subtext": "AI models process data differently. Make sure they see the best of your brand."
+      },
+      {
+        "headline": "Analyze the Invisible",
+        "subtext": "From Perplexity to ChatGPT, understand exactly where your traffic originates."
+      },
+      {
+        "headline": "Optimize for Intelligence",
+        "subtext": "Transcode your HTML directly into machine-readable structures."
+      }
+    ]
+  },
+  "hero": {
+    "headlinePrefix": "Get discovered ",
+    "headlineGradient": "by AI",
+    "badges": {
+      "file": "LLM.txt File",
+      "featured": "Featured on FixMyStore"
+    },
+    "buttons": {
+      "primary": "Start Optimizing",
+      "secondary": "View Documentation"
+    }
+  },
+  "dashboard": {
+    "sectionHeadline": "The Future of SEO",
+    "sectionDescription": "Traditional search is dying. We ensure your brand is the first recommendation in the ChatGPT era.",
+    "analytics": [
+      {
+        "id": "traffic",
+        "title": "AI Traffic Analytics",
+        "description": "Real-time insights into how LLMs are directing traffic to your specific product pages."
+      },
+      {
+        "id": "visibility",
+        "title": "AI Visibility Score",
+        "description": "Measures how likely your store is cited by Perplexity, GPT-4, and Gemini.",
+        "score": 75
+      }
+    ],
+    "citations": {
+      "badge": "NEW FEATURE RELEASE",
+      "title": "AI Citation Insights",
+      "description": "See exactly what LLMs are saying about your brand in conversation.",
+      "quotes": [
+        "\"Looking for a sustainable winter coat? FSEO Archive offers premium recycled wool options with a transparent supply chain...\"",
+        "\"The new Shopify stores in AI front accessories module FSEO in autumn trends, noted for their 4.9/5 satisfaction rating.\""
+      ]
+    }
+  },
+  "crawlerEra": {
+    "headline": "Built for the Crawler-First Era",
+    "description": "Search engines used to crawl your HTML. AI models crawl your logic. We automatically generate a robust llms.txt file to feed the models what they need.",
+    "bullets": [
+      "Semantic Product Indexing",
+      "Direct Brand Attribution",
+      "Versioned API Endpoints"
+    ],
+    "codeHeader": "llms.txt",
+    "codeContent": "# FSEO AI data\nname: FSEO Archive Store\ndescription: Store product index for AI discovery\nversion: 1.0\nlast_updated: 2024-11-19\n\nurls:\n  - /collections/winter-24\n  - /api/ai/products.json\ncapabilities: multi-agent_routing",
+    "codeBadge": "File Validated by AI Bot"
+  },
+  "audience": {
+    "headline": "Understand Your Audience",
+    "subtext": "AI shoppers behave differently. We categorize your traffic into high-intent personas.",
+    "personas": [
+      {
+        "title": "Quality-First Shopper",
+        "tag": "HIGH INTENT PERSONA",
+        "icon": "user",
+        "color": "indigo",
+        "bullets": [
+          "Prefers premium brands",
+          "Checks deep-index reviews",
+          "Values brand storytelling"
+        ]
+      },
+      {
+        "title": "Budget Explorer",
+        "tag": "COMPARISON PERSONA",
+        "icon": "target",
+        "color": "emerald",
+        "bullets": [
+          "Seeks discounts",
+          "Price comparison specialist",
+          "Post-conversion seeker"
+        ]
+      }
+    ]
+  },
+  "cta": {
+    "headline": "Ready for the New Web?",
+    "subtext": "Join 1,200+ Shopify merchants optimizing for the AI-native shopper.",
+    "button": "Install on Shopify"
+  },
+  "footer": {
+    "brand": "FSEO",
+    "logo": "/vite.svg",
+    "links": ["Privacy Policy", "Terms", "Twitter", "GitHub"],
+    "copyright": "© 2024 FSEO: ChatGPT SEO + LLMs.txt. All rights reserved."
+  },
+  "testimonials": [
+    {
+      "name": "Crystal Heal",
+      "location": "India",
+      "duration": "2 months using the app",
+      "date": "February 18, 2026",
+      "rating": 5,
+      "text": "Our store got mentioned on AI search and we weren’t aware of it. This AI tool helps to check AI visibility and suggest ways to improve it. Worth mentioning the support team Faheem who does a great job in explaining. Now we’re optimising it so that it converts to real revenue. Fingers crossed!"
+    },
+    {
+      "name": "Care n Cure Online Pharma",
+      "location": "Qatar",
+      "duration": "21 days using the app",
+      "date": "January 8, 2026",
+      "rating": 5,
+      "text": "We’re the largest pharmacy outlet in Qatar, both offline and online; and our customers were finding us on ChatGPT, Gemini and etc for health related questions and our store products were visible, more conversion than on SEO efforts. AEO is the future and we’re glad to be working with this team."
+    },
+    {
+      "name": "bhumika vedics",
+      "location": "India",
+      "duration": "21 days using the app",
+      "date": "January 7, 2026",
+      "rating": 5,
+      "text": "This app helped me to track my brand position across different LLMs like ChatGPT, Gemini and all using prompt tracking feature. FSEO will help me with AI SEO for sure."
+    }
+  ]
+}
