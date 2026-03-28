@@ -1,68 +1,89 @@
 import express from 'express';
-import fs from 'fs';
-import path from 'path';
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const router = express.Router();
-const DB_PATH = path.resolve('server/db.json');
 
-// Initialize local DB file if not exists
-if (!fs.existsSync(DB_PATH)) {
-  fs.writeFileSync(DB_PATH, JSON.stringify({}));
+// Initialize Supabase Client
+const supabaseUrl = process.env.VITE_SUPABASE_URL;
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('❌ Supabase credentials missing in Backend!');
 }
 
-// Helper to read DB
-const readDB = () => JSON.parse(fs.readFileSync(DB_PATH, 'utf-8'));
-
-// Helper to write DB
-const writeDB = (data) => fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Get all content
 router.get('/', async (req, res) => {
   try {
-    const contentMap = readDB();
+    const { data, error } = await supabase
+      .from('site_content')
+      .select('*');
+
+    if (error) throw error;
+
+    // Convert array back to the expected map format { section: data }
+    const contentMap = data.reduce((acc, item) => {
+      acc[item.section] = item;
+      return acc;
+    }, {});
+
     res.json(contentMap);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Create new content section
+// Create/Update content section (Upsert)
 router.post('/', async (req, res) => {
   try {
     const { section, title, description, image, data } = req.body;
     if (!section) return res.status(400).json({ error: 'Section is required' });
 
-    const db = readDB();
-    db[section] = { section, title, description, image, data, updatedAt: Date.now() };
-    writeDB(db);
+    const { data: upsertData, error } = await supabase
+      .from('site_content')
+      .upsert({ 
+        section, 
+        title, 
+        description, 
+        image, 
+        data, 
+        updated_at: new Date().toISOString() 
+      })
+      .select()
+      .single();
 
-    res.status(201).json(db[section]);
+    if (error) throw error;
+    res.status(201).json(upsertData);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// Update content by section
+// Update content by section (Partial update)
 router.put('/:section', async (req, res) => {
   try {
     const { section } = req.params;
     const { title, description, image, data } = req.body;
     
-    const db = readDB();
-    const existing = db[section] || { section };
-    
-    db[section] = {
-      ...existing,
-      title: title ?? existing.title,
-      description: description ?? existing.description,
-      image: image ?? existing.image,
-      data: data ?? existing.data,
-      updatedAt: Date.now()
-    };
-    writeDB(db);
+    const { data: updateData, error } = await supabase
+      .from('site_content')
+      .update({
+        title,
+        description,
+        image,
+        data,
+        updated_at: new Date().toISOString()
+      })
+      .eq('section', section)
+      .select()
+      .single();
 
-    res.json(db[section]);
+    if (error) throw error;
+    res.json(updateData);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -72,11 +93,12 @@ router.put('/:section', async (req, res) => {
 router.delete('/:section', async (req, res) => {
   try {
     const { section } = req.params;
-    const db = readDB();
-    if (db[section]) {
-      delete db[section];
-      writeDB(db);
-    }
+    const { error } = await supabase
+      .from('site_content')
+      .delete()
+      .eq('section', section);
+
+    if (error) throw error;
     res.json({ message: 'Content deleted successfully' });
   } catch (err) {
     res.status(500).json({ error: err.message });
