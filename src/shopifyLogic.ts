@@ -3,8 +3,8 @@
 /**
  * CONFIGURATION: Update these values with your Shopify Storefront API credentials.
  */
-const SHOP_DOMAIN = '4cm1ia-0e.myshopify.com';
-const STOREFRONT_ACCESS_TOKEN = 'PASTE_YOUR_STOREFRONT_TOKEN_HERE';
+const SHOP_DOMAIN = import.meta.env.VITE_SHOPIFY_DOMAIN || '4cm1ia-0e.myshopify.com';
+const STOREFRONT_ACCESS_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN || 'PASTE_YOUR_STOREFRONT_TOKEN_HERE';
 
 export interface ShopifyProduct {
   id: string;
