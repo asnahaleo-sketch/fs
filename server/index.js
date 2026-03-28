@@ -9,9 +9,19 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const IS_PROD = process.env.NODE_ENV === 'production';
 
 app.use(cors());
 app.use(express.json());
+
+// Request logging middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: Date.now() }));
 
 // NOTE: Using a local JSON database (server/db.json) fallback since MongoDB might not be running locally!
 // If you want MongoDB, you can uncomment this when your local instance is active:
@@ -39,6 +49,11 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (!IS_PROD) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 STRATOS LOCAL: http://localhost:${PORT}`);
+    console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
+  });
+}
+
+export default app;

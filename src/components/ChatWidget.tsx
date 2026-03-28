@@ -1,19 +1,39 @@
 import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Sparkles, Store, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { processChatQuery } from '../shopifyLogic';
+// import { processChatQuery } from '../shopifyLogic'; // No longer needed as we use the real backend MCP
+
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([
-    { role: 'assistant', text: 'Hello! I can help you find products or provide insights from our Shopify store.', isMCP: false }
+    { role: 'assistant', text: 'Hello! I am connected to the live Stratos Storefront via MCP. I can help you find products, check policies, or manage your cart.', isMCP: false }
   ]);
+  const [cartId, setCartId] = useState<string | null>(null);
+  const [isServerOnline, setIsServerOnline] = useState<boolean | null>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
+
+  // Health check on mount
+  useEffect(() => {
+    const checkServer = async () => {
+      try {
+        const res = await fetch('/api/health');
+        if (res.ok) setIsServerOnline(true);
+        else setIsServerOnline(false);
+      } catch (err) {
+        setIsServerOnline(false);
+      }
+    };
+    checkServer();
+    const interval = setInterval(checkServer, 30000); // Check every 30s
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,20 +44,31 @@ export default function ChatWidget() {
     setMessage('');
 
     try {
-      const data = await processChatQuery(currentMessage);
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: currentMessage, cartId })
+      });
       
+      const data = await response.json();
+      
+      if (data.cartId) setCartId(data.cartId);
+
       setMessages(prev => [...prev, { 
         role: 'assistant', 
         text: data.reply,
         isMCP: true,
-        products: data.products
+        products: data.products,
+        checkoutUrl: data.checkoutUrl
       } as any]);
-    } catch (err) {
+    } catch (err: any) {
+      console.error('[ChatWidget] Error:', err);
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        text: "I'm sorry, I couldn't connect to the server.",
+        text: `**Connection Error**: I couldn't reach the Stratos backend. ${err.message === 'Failed to fetch' ? 'The server might be offline.' : err.message}`,
         isMCP: false
       } as any]);
+      setIsServerOnline(false);
     }
   };
 
@@ -60,6 +91,12 @@ export default function ChatWidget() {
                 <div>
                   <h3 className="font-semibold text-sm">Storefront Assistant</h3>
                   <p className="text-[10px] text-white/50 uppercase tracking-wider font-bold">Connected: 4cm1ia-0e.myshopify.com</p>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    <div className={`w-1.5 h-1.5 rounded-full ${isServerOnline ? 'bg-green-500 animate-pulse' : isServerOnline === false ? 'bg-red-500' : 'bg-yellow-500'}`} />
+                    <span className="text-[8px] text-white/40 uppercase font-bold tracking-widest">
+                      {isServerOnline ? 'Backend Online' : isServerOnline === false ? 'Backend Offline' : 'Checking Server...'}
+                    </span>
+                  </div>
                 </div>
               </div>
               <button 
@@ -116,6 +153,19 @@ export default function ChatWidget() {
                             </div>
                           </div>
                         ))}
+                        
+                        {(msg as any).checkoutUrl && (
+                          <motion.a 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            href={(msg as any).checkoutUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 w-full py-3 bg-white text-black text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-gray-200 transition-all shadow-[0_0_20px_rgba(255,255,255,0.1)] mt-4"
+                          >
+                            Complete Checkout <ExternalLink className="w-4 h-4" />
+                          </motion.a>
+                        )}
                       </div>
                     )}
                   </div>
